@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17.5
+    container_name: visitors-registration-service_db
+    restart: always 
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: visitors-registration-service
+    build: .
+    restart: always
+    ports:
+      - "8550:8550"
+    environment:
+      DATABASE_URL: "postgresql+pg8000://postgres:postgres@db:5432/postgres"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
